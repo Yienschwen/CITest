@@ -1,6 +1,6 @@
 #autoconf output
 config.*
-Makefile
+#Makefile
 autom4te.cache
 
 #compile output
