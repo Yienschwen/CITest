@@ -7,4 +7,4 @@ before-install:
 - cat /proc/cpuinfo
 - cat /etc/osrelease
 script:
-- autoconf && ./configure && make && maketest
+- autoconf && ./configure && make && make test
