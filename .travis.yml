@@ -5,7 +5,7 @@ os:
 - linux
 before_script:
 - cat /proc/cpuinfo
-- cat /etc/osrelease
+- cat /etc/os-release
 - chmod +x ./configure
 script:
 - ./configure && make && make test
