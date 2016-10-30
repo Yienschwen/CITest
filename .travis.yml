@@ -3,7 +3,7 @@ compiler:
 - gcc
 os:
 - linux
-before-install:
+before_script:
 - cat /proc/cpuinfo
 - cat /etc/osrelease
 script:
