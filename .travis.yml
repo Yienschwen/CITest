@@ -1,8 +1,10 @@
 language: cpp
 compiler:
-- clang
+- gcc
 os:
 - linux
 before-install:
 - cat /proc/cpuinfo
 - cat /etc/osrelease
+script:
+- autoconf && ./configure && make && maketest
