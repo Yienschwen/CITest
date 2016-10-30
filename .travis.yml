@@ -6,5 +6,17 @@ os:
 before_script:
 - cat /proc/cpuinfo
 - cat /etc/osrelease
+- chmod +x ./configure
 script:
-- autoconf && ./configure && make && make test
+- ./configure && make && make test
+deploy:
+  provider: releases
+  api_key:
+    secure: QZRfwt3Cstq94AGRidAlL1mKm1lw6NsiK05MKbaxd9/8H8Uin/5jpRZGqb/g5DlvEgxUjlB5AL9+0QjNxflDU4lIGf6bHHmg3CWj7xePYlRphfwk3/9pfiWRDCrs/5Nj6wCfnl36WsqRorj5FfOGZ050QVzsQrxGpZZRUNXqIvytl/nfR4wUNRrRiJhZl0KuO/JVq3vEBflju94CLfJwS3qRKeo4cN8vW7XD127K7LPob4Tf++k7dbtqo4+0q2aYv1J14tbFXln/iDjAyo6lHahg3UNhy8fsImYbF8l/VXaSiphfXMqEzpqBQ+BLbQ1YW/fuNrKXsXofz8pstUcC1AH54VxOxfLg4wnaRN26IIovOFKqNzVKHPzIvU2Q1xhPqMLBGmgDuKYb6JJ9wDRH7zKk6oA2NqFEmR8bJN2TJLCFs9DtWqZOmQ66XrHPlucWbTowm+Ktf7FjQD9XpMBAycWWSlfR5GE0UGCeH6ZYPV7ybcbQiR5hvfBUBk6kJJRcgmTESxmbAAlVZJVDKyReUcWVcpcJkdVDmsP+AyF+0tDfxSAyo/kKd9Sy2UOnNmYCVVLsqQdNHjuVeOPJT5FZznrgWu/Ekcx8qSw7jSpHY9SQ0isDV0sjyg12iEE0B8oCick26IefBJ4BTsFYafX4MK38qnRjVznTI7sbo823IEM=
+  file: 
+    - dpps_test 
+    - dpps.avx.so 
+    - dpps.sse41.so
+  skip_cleanup: true
+  on:
+    repo: Yienschwen/travisTest

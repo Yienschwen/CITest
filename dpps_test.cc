@@ -1,5 +1,5 @@
 #include <iostream>
-// #include <cstdint>
+#include <dlfcn.h>
 
 #if defined(_MSC_VER)
 
@@ -13,6 +13,11 @@
     }
 
 #endif
+
+float *A, *B;
+unsigned N;
+typedef float (*dpps_t)(float*, float*, unsigned);
+
 int info[4], nIds;
 unsigned nExIds;
 
@@ -103,27 +108,84 @@ void cpuflags() {
     }
 }
 
+struct handle_func {
+
+	~handle_func() {
+		if (handle) {
+			dlclose(handle);
+		}
+	}
+
+	void * handle;
+	void * func;
+};
+
+handle_func loadFunc(const char* strFile, const char* strFunc) {
+	handle_func hfReturn;
+	hfReturn.handle = hfReturn.func = NULL;
+	void* handle = dlopen(strFile, RTLD_LAZY);
+	if (!handle) {
+		std::cerr << "Cannot open library: " << dlerror() << '\n';
+		return hfReturn;
+	}
+	dlerror(); // reset errors
+	void* func = dlsym(handle, strFunc);
+	const char *symerror = dlerror();
+	if (symerror) {
+		std::cerr << "Cannot load symbol '" << strFunc << "': " << symerror << '\n';
+		dlclose(handle);
+		return hfReturn;
+	}
+	hfReturn.handle = handle;
+	hfReturn.func = func;
+	return hfReturn;
+}
+
+int testFunc(const char* strLib) {
+	handle_func hfAVX = loadFunc(strLib, "dot_product");
+	if (hfAVX.func) {
+		dpps_t dpps = (dpps_t) hfAVX.func;
+		float fltResult = dpps(A, B, N);
+		std::cout << "dpps result: " << fltResult << '\n';
+		delete [] A;
+		delete [] B;
+		return 0;
+	}
+	return 1;
+}
+
 int main() {
-    
     cpuid(info, 0);
     nIds = info[0];
     cpuid(info, 0x80000000);
     nExIds = info[0];
-
     cpuflags();
-    if (HW_AVX2 && HW_AVX) {
-        std::cout << "AVX2 && AVX\n";
-    }
-    else if (HW_AVX) {
-        std::cout << "AVX\n";
-    }
-    else if (HW_SSE41) {
-        std::cout << "SSE41\n";
-    }
-    else {
-        std::cout << ":-(\n";
-    }
 
+	std::cin >> N;
+	A = new float[N];
+	B = new float[N];
+	for (unsigned i = 0; i < N; i++) {
+		std::cin >> A[i];
+	}
+	for (unsigned i = 0; i < N; i++) {
+		std::cin >> B[i];
+	}
+	std::cout << "Vectors input finished\n";
 
-    return 0;
+	int intReturn = 0;
+	if (HW_AVX) {
+		std::cout << "AVX detected.\n";
+		intReturn = testFunc("./dpps.avx.so");
+	}
+	if (HW_SSE && HW_SSE41 && intReturn) {
+		std::cout << "SSE and SSE4.1 detected.\n";
+		intReturn = testFunc("./dpps.sse41.so");
+	}
+	if (intReturn) {
+		std::cerr << "No availiable library.\n";
+		delete [] A;
+		delete [] B;
+		return 1;
+	}
+	return 0;
 }
