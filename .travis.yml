@@ -6,7 +6,6 @@ os:
 before_script:
 - cat /proc/cpuinfo
 - cat /etc/os-release
-- chmod +x ./configure
 script:
 - make && make test
 deploy:
