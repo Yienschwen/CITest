@@ -1,0 +1,15 @@
+language: cpp
+compiler:
+- clang
+os:
+- linux
+before-install:
+- cat /proc/cpuinfo
+- cat /etc/osrelease
+install:
+- true
+script:
+- make 
+after-sucess:
+- make test
+
