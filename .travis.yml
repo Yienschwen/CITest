@@ -8,7 +8,7 @@ before_script:
 - cat /etc/os-release
 - chmod +x ./configure
 script:
-- ./configure && make && make test
+- make && make test
 deploy:
   provider: releases
   api_key:
