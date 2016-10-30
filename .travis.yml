@@ -6,10 +6,3 @@ os:
 before-install:
 - cat /proc/cpuinfo
 - cat /etc/osrelease
-install:
-- true
-script:
-- make 
-after-sucess:
-- make test
-

@@ -1,5 +1,4 @@
 #autoconf output
-configure
 config.*
 Makefile
 autom4te.cache
