@@ -7,3 +7,6 @@ Release/
 .vs/
 *.db
 *.opendb
+
+# VS Code files
+.vscode/
