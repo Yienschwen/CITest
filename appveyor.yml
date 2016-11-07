@@ -41,8 +41,10 @@ build:
   project: appveyorTest.sln      # path to Visual Studio solution or project
 
 after_build:
-  - 7z a dpps.%platform%.zip Release\%platform%\dpps.*.dll
-  - 7z a dpps.%platform%.zip Release\%platform%\dppsTest.exe
+  - cd Release\%platform%
+  - 7z a ..\..\dpps.%platform%.zip dpps.*.dll
+  - 7z a ..\..\dpps.%platform%.zip dppsTest.exe
+  - cd ..\..
 
 #---------------------------------#
 #       tests configuration       #
