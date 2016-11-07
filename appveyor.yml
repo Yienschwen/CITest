@@ -61,6 +61,12 @@ build:
   parallel: true                  # enable MSBuild parallel builds
   project: appveyorTest.sln      # path to Visual Studio solution or project
 
+after-build:
+    - ps: Compress-Archive .\x64\Release\dpps.*.dll -DestinationPath dpps.win64.zip
+    - ps: Compress-Archive .\x64\Release\dppsTest.exe -DestinationPath dpps.win64.zip -Update
+    - ps: Compress-Archive .\Release\dpps.*.dll -DestinationPath dpps.win32.zip
+    - ps: Compress-Archive .\Release\dppsTest.exe -DestinationPath dpps.win32.zip -Update
+
 # to disable automatic builds
 #build: off
 
@@ -73,27 +79,17 @@ test: off
 
 
 #---------------------------------#
-#      artifacts configuration    #
+#       deploy configuration      #
 #---------------------------------#
 
-# artifacts:
+deploy:
+  provider: GitHub
+  auth_token:
+    secure: 1qhWE2Ysf6odyKU0+ZC5YEvtXrKTy6mNn2CidseBhTd4kIf3srH0d4raxYQI0Mtj # your encrypted token from GitHub
+  artifact: dpps.*.zip             # upload all NuGet packages to release assets
+  on:
+    branch: appveyor               # release from master branch only
 
-#   # pushing a single file
-#   - path: test.zip
-
-#   # pushing a single file with environment variable in path and "Deployment name" specified
-#   - path: MyProject\bin\$(configuration)
-#     name: myapp
-
-#   # pushing entire folder as a zip archive
-#   - path: logs
-
-#   # pushing all *.nupkg files in build directory recursively
-#   - path: '**\*.nupkg'
-
-
-# to disable deployment
-deploy: off
 
 #---------------------------------#
 #         notifications           #
