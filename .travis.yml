@@ -17,5 +17,5 @@ deploy:
     - dpps.elf64.zip
   skip_cleanup: true
   on:
-    repo: Yienschwen/travisTest
+    repo: Yienschwen/CITest
     tag: true
