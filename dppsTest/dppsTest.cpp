@@ -3,21 +3,8 @@
 
 #include "stdafx.h"
 
-#if defined(_MSC_VER)
-
-#define cpuid(info, x)    __cpuidex(info, x, 0)
-
-#endif
-
 float *A, *B;
 unsigned N;
-
-
-#if defined(_MSC_VER)
-	typedef float(__cdecl *dpps_t)(float*, float*, unsigned);
-#elif defined(__GNUC__)
-	typedef float(*dpps_t)(float*, float*, unsigned);
-#endif
 
 int info[4], nIds;
 unsigned nExIds;
@@ -109,30 +96,30 @@ void cpuflags() {
 	}
 }
 
-int testFunc(const wchar_t* strLib) {
+int testFunc(const cchar * strLib) {
 
 	// typedef int(__cdecl *MYPROC)(float*, float*, unsigned);
 
-	HINSTANCE hinstLib;
-	dpps_t ProcAdd;
-	BOOL fFreeResult, fRunTimeLinkSuccess = FALSE;
+	DLFILE dlLoad;
+	dpps_t dpps;
+	int fFreeResult, fRunTimeLinkSuccess = 0;
 	int intReturn = 1;
 	// Get a handle to the DLL module.
 
-	hinstLib = LoadLibrary(strLib);
+	dlLoad = LoadLibrary(strLib);
 
 	// If the handle is valid, try to get the function address.
 
-	if (hinstLib != NULL)
+	if (dlLoad != NULL)
 	{
-		ProcAdd = (dpps_t) GetProcAddress(hinstLib, "dpps");
+		dpps = (dpps_t) GetProcAddress(dlLoad, "dpps");
 
 		// If the function address is valid, call the function.
 
-		if (NULL != ProcAdd)
+		if (dpps != NULL)
 		{
-			fRunTimeLinkSuccess = TRUE;
-			float fltResult = ProcAdd(A, B, N);
+			fRunTimeLinkSuccess = 1;
+			float fltResult = dpps(A, B, N);
 			std::cout << "dpps result: " << fltResult << '\n';
 			delete[] A;
 			delete[] B;
@@ -140,7 +127,7 @@ int testFunc(const wchar_t* strLib) {
 		}
 		// Free the DLL module.
 
-		fFreeResult = FreeLibrary(hinstLib);
+		fFreeResult = FreeLibrary(dlLoad);
 	}
 
 	// If unable to call the DLL function, use an alternative.
@@ -169,11 +156,11 @@ int main() {
 	int intReturn = 0;
 	if (HW_AVX) {
 		std::cout << "AVX detected.\n";
-		intReturn = testFunc(L".\\dpps.avx.dll");
+		intReturn = testFunc(TEXT(".") OS_SEP TEXT("dpps.avx") DL_APPEND);
 	}
 	if (HW_SSE && HW_SSE41 && intReturn) {
 		std::cout << "SSE and SSE4.1 detected.\n";
-		intReturn = testFunc(L".\\dpps.sse.dll");
+		intReturn = testFunc(TEXT(".") OS_SEP TEXT("dpps.sse") DL_APPEND);
 	}
 	if (intReturn) {
 		std::cerr << "No availiable library.\n";
