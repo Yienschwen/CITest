@@ -6,16 +6,6 @@
 #   - Section names should be unique on each level.
 
 #---------------------------------#
-#      general configuration      #
-#---------------------------------#
-
-# Do not build on tags (GitHub and BitBucket)
-skip_tags: true
-
-# Start builds on tags only (GitHub and BitBucket)
-skip_non_tags: true
-
-#---------------------------------#
 #    environment configuration    #
 #---------------------------------#
 
@@ -51,8 +41,8 @@ build:
   project: appveyorTest.sln      # path to Visual Studio solution or project
 
 after_build:
-    - 7z a dpps.%platform%.zip Release\%platform%\dpps.*.dll
-    - 7z a dpps.%platform%.zip Release\%platform%\dppsTest.exe
+  - 7z a dpps.%platform%.zip Release\%platform%\dpps.*.dll
+  - 7z a dpps.%platform%.zip Release\%platform%\dppsTest.exe
 
 #---------------------------------#
 #       tests configuration       #
@@ -65,12 +55,17 @@ test: off
 #       deploy configuration      #
 #---------------------------------#
 
+artifacts:
+  - path: dpps.*.zip
+    name: zipPack
+    type: zip
+
 
 deploy:
   provider: GitHub
   auth_token:
     secure: 1qhWE2Ysf6odyKU0+ZC5YEvtXrKTy6mNn2CidseBhTd4kIf3srH0d4raxYQI0Mtj # your encrypted token from GitHub
-  artifact: dpps.*.zip
+  artifact: zipPack
   on:
     branch: appveyor               # release from master branch only
 
