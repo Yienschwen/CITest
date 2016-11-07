@@ -65,15 +65,12 @@ test: off
 #       deploy configuration      #
 #---------------------------------#
 
-artifacts:
-  - path: dpps.$(platform).zip
-    type: Zip
 
 deploy:
   provider: GitHub
   auth_token:
     secure: 1qhWE2Ysf6odyKU0+ZC5YEvtXrKTy6mNn2CidseBhTd4kIf3srH0d4raxYQI0Mtj # your encrypted token from GitHub
-  artifact: .\*.zip
+  artifact: dpps.*.zip
   on:
     branch: appveyor               # release from master branch only
 
