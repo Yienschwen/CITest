@@ -1,8 +1,9 @@
-#autoconf output
-config.*
-#Makefile
-autom4te.cache
+# Visual studio files
 
-#compile output
-main
-*.o
+ipch/
+x64/
+Debug/
+Release/
+.vs/
+*.db
+*.opendb
