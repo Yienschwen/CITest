@@ -50,11 +50,7 @@ build:
   parallel: true                  # enable MSBuild parallel builds
   project: appveyorTest.sln      # path to Visual Studio solution or project
 
-after_build:
-    - ps: Compress-Archive .\x64\Release\dpps.*.dll -DestinationPath dpps.win64.zip
-    - ps: Compress-Archive .\x64\Release\dppsTest.exe -DestinationPath dpps.win64.zip -Update
-    - ps: Compress-Archive .\Release\dpps.*.dll -DestinationPath dpps.win32.zip
-    - ps: Compress-Archive .\Release\dppsTest.exe -DestinationPath dpps.win32.zip -Update
+
 
 #---------------------------------#
 #       tests configuration       #
@@ -75,3 +71,8 @@ deploy:
   on:
     branch: appveyor               # release from master branch only
 
+before_deploy:
+    - ps: Compress-Archive .\x64\Release\dpps.*.dll -DestinationPath dpps.win64.zip
+    - ps: Compress-Archive .\x64\Release\dppsTest.exe -DestinationPath dpps.win64.zip -Update
+    - ps: Compress-Archive .\Release\dpps.*.dll -DestinationPath dpps.win32.zip
+    - ps: Compress-Archive .\Release\dppsTest.exe -DestinationPath dpps.win32.zip -Update
