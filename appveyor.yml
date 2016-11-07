@@ -15,23 +15,13 @@ image: Visual Studio 2015
 # clone directory
 # clone_folder: c:\projects\myproject
 
-# this is how to allow failing jobs in the matrix
-matrix:
-  fast_finish: true     # set this flag to immediately finish build once one of the jobs fails.
-  allow_failures:
-    - platform: x86
-      configuration: Release
-    - platform: x64
-      configuration: Release
-
-
 #---------------------------------#
 #       build configuration       #
 #---------------------------------#
 
 # build platform, i.e. x86, x64, Any CPU. This setting is optional.
 platform:
-    - x64
+    - Win64
     - Win32
 
 configuration: Release
