@@ -59,7 +59,7 @@ configuration: Release
 
 build:
   parallel: true                  # enable MSBuild parallel builds
-  project: appvetorTest.sln      # path to Visual Studio solution or project
+  project: appveyorTest.sln      # path to Visual Studio solution or project
 
 # to disable automatic builds
 #build: off
