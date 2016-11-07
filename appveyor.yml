@@ -42,7 +42,7 @@ matrix:
 # build platform, i.e. x86, x64, Any CPU. This setting is optional.
 platform:
     - x64
-    - x86
+    - Win32
 
 configuration: Release
 
@@ -50,7 +50,9 @@ build:
   parallel: true                  # enable MSBuild parallel builds
   project: appveyorTest.sln      # path to Visual Studio solution or project
 
-
+after_build:
+    - ps: 7z a dpps.$(platform).zip Release\$(platform)\dpps.*.dll
+    - ps: 7z a dpps.$(platform).zip Release\$(platform)\dppsTest.exe
 
 #---------------------------------#
 #       tests configuration       #
@@ -64,19 +66,14 @@ test: off
 #---------------------------------#
 
 artifacts:
-  - path: Release\x64\dpps.*.dll
-  - path: Release\x64\dppsTest.exe
-    name: dpps.x64
-
-  - path: Release\Win32\dpps.*.dll
-  - path: Release\Win32\dppsTest.exe
-    name: dpps.win32
+  - path: dpps.$(platform).zip
+    type: Zip
 
 deploy:
   provider: GitHub
   auth_token:
     secure: 1qhWE2Ysf6odyKU0+ZC5YEvtXrKTy6mNn2CidseBhTd4kIf3srH0d4raxYQI0Mtj # your encrypted token from GitHub
-  artifact: dpps.x64 dpps.win32
+  artifact: .\*.zip
   on:
     branch: appveyor               # release from master branch only
 
