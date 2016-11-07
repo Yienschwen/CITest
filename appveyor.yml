@@ -21,8 +21,8 @@ image: Visual Studio 2015
 
 # build platform, i.e. x86, x64, Any CPU. This setting is optional.
 platform:
-    - Win64
-    - Win32
+    - x64
+    - x86
 
 configuration: Release
 
@@ -31,10 +31,8 @@ build:
   project: appveyorTest.sln      # path to Visual Studio solution or project
 
 after_build:
-  - cd Release\%platform%
-  - 7z a ..\..\dpps.%platform%.zip dpps.*.dll
-  - 7z a ..\..\dpps.%platform%.zip dppsTest.exe
-  - cd ..\..
+  - if %platform%==x64 cd Release\x64\ && 7z a ..\..\dpps.win64.zip dppsTest.exe dpps.*.dll && cd ..\..
+  - if %platform%==x86 cd Release\Win32\ && 7z a ..\..\dpps.win32.zip dppsTest.exe dpps.*.dll && cd ..\..
 
 #---------------------------------#
 #       tests configuration       #
@@ -58,6 +56,4 @@ deploy:
   auth_token:
     secure: 1qhWE2Ysf6odyKU0+ZC5YEvtXrKTy6mNn2CidseBhTd4kIf3srH0d4raxYQI0Mtj # your encrypted token from GitHub
   artifact: zipPack
-  on:
-    branch: appveyor               # release from master branch only
 
