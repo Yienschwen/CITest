@@ -44,31 +44,17 @@ platform:
     - x64
     - x86
 
-# to add several platforms to build matrix:
-#platform:
-#  - x86
-#  - Any CPU
-
-# build Configuration, i.e. Debug, Release, etc.
 configuration: Release
-
-# to add several configurations to build matrix:
-#configuration:
-#  - Debug
-#  - Release
 
 build:
   parallel: true                  # enable MSBuild parallel builds
   project: appveyorTest.sln      # path to Visual Studio solution or project
 
-after-build:
+after_build:
     - ps: Compress-Archive .\x64\Release\dpps.*.dll -DestinationPath dpps.win64.zip
     - ps: Compress-Archive .\x64\Release\dppsTest.exe -DestinationPath dpps.win64.zip -Update
     - ps: Compress-Archive .\Release\dpps.*.dll -DestinationPath dpps.win32.zip
     - ps: Compress-Archive .\Release\dppsTest.exe -DestinationPath dpps.win32.zip -Update
-
-# to disable automatic builds
-#build: off
 
 #---------------------------------#
 #       tests configuration       #
@@ -76,7 +62,6 @@ after-build:
 
 # to disable automatic tests
 test: off
-
 
 #---------------------------------#
 #       deploy configuration      #
@@ -86,23 +71,7 @@ deploy:
   provider: GitHub
   auth_token:
     secure: 1qhWE2Ysf6odyKU0+ZC5YEvtXrKTy6mNn2CidseBhTd4kIf3srH0d4raxYQI0Mtj # your encrypted token from GitHub
-  artifact: dpps.*.zip             # upload all NuGet packages to release assets
+  artifact: dpps.*.zip             # upload all zip files
   on:
     branch: appveyor               # release from master branch only
-
-
-#---------------------------------#
-#         notifications           #
-#---------------------------------#
-
-# notifications:
-
-#   # Email
-#   - provider: Email
-#     to:
-#       - user1@email.com
-#       - user2@email.com
-#     subject: 'Build {{status}}'                  # optional
-#     message: "{{message}}, {{commitId}}, ..."    # optional
-#     on_build_status_changed: true
 
